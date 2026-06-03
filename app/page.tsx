@@ -41,7 +41,7 @@ export default function Home() {
   const [ownerId, setOwnerId] = useState("");
 
   const fetchUsers = async () => {
-    const response = await fetch("https://trip-planner-server-k0t8.onrender.com");
+    const response = await fetch("https://trip-planner-server-k0t8.onrender.com/users");
     const data = await response.json();
     setUsers(data);
 
