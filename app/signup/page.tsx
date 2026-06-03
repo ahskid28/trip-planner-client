@@ -21,7 +21,7 @@ export default function SignupPage() {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:5000/auth/signup", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

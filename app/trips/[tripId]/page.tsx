@@ -282,27 +282,27 @@ const [isDarkMode, setIsDarkMode] = useState(false);
   const createdById = "e56f6d00-4994-4940-88d7-806835aff75f";
 
   const fetchTrip = async () => {
-    const res = await fetch(`http://localhost:5000/trips/${tripId}`);
+    const res = await fetch(`https://trip-planner-server-k0t8.onrender.com/trips/${tripId}`);
     const data = await res.json();
     setTrip(data);
   };
 
   const fetchUsers = async () => {
-    const res = await fetch("http://localhost:5000/users");
+    const res = await fetch("https://trip-planner-server-k0t8.onrender.com/users");
     const data = await res.json();
     setUsers(data);
   };
 
   const fetchCollaborators = async () => {
     const res = await fetch(
-      `http://localhost:5000/trips/${tripId}/collaborators`
+      `https://trip-planner-server-k0t8.onrender.com/trips/${tripId}/collaborators`
     );
     const data = await res.json();
     setCollaborators(data);
   };
 
   const fetchDays = async () => {
-    const res = await fetch(`http://localhost:5000/trips/${tripId}/days`);
+    const res = await fetch(`https://trip-planner-server-k0t8.onrender.com/trips/${tripId}/days`);
     const data = await res.json();
 
     setDays(data);
@@ -314,7 +314,7 @@ const [isDarkMode, setIsDarkMode] = useState(false);
     const groupedItems: Record<string, ItineraryItem[]> = {};
 
     for (const day of data) {
-      const itemRes = await fetch(`http://localhost:5000/days/${day.id}/items`);
+      const itemRes = await fetch(`https://trip-planner-server-k0t8.onrender.com/days/${day.id}/items`);
       const itemData = await itemRes.json();
       groupedItems[day.id] = itemData;
     }
@@ -323,7 +323,7 @@ const [isDarkMode, setIsDarkMode] = useState(false);
   };
 
   const fetchExpenses = async () => {
-    const res = await fetch(`http://localhost:5000/trips/${tripId}/expenses`);
+    const res = await fetch(`https://trip-planner-server-k0t8.onrender.com/trips/${tripId}/expenses`);
     const data = await res.json();
     setExpenses(data);
   };
@@ -456,7 +456,7 @@ const deleteBooking = (bookingId: string) => {
       [dayId]: reorderedItems,
     });
 
-    await fetch(`http://localhost:5000/days/${dayId}/items/reorder`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/days/${dayId}/items/reorder`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -473,7 +473,7 @@ const deleteBooking = (bookingId: string) => {
       return;
     }
 
-    await fetch("http://localhost:5000/days", {
+    await fetch("https://trip-planner-server-k0t8.onrender.com/days", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -496,7 +496,7 @@ const deleteBooking = (bookingId: string) => {
       return;
     }
 
-    await fetch("http://localhost:5000/items", {
+    await fetch("https://trip-planner-server-k0t8.onrender.com/items", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -520,7 +520,7 @@ const deleteBooking = (bookingId: string) => {
   };
 
   const deleteItem = async (itemId: string) => {
-    await fetch(`http://localhost:5000/items/${itemId}`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/items/${itemId}`, {
       method: "DELETE",
     });
 
@@ -560,7 +560,7 @@ const inviteCollaborator = async () => {
       return;
     }
 
-    await fetch(`http://localhost:5000/trips/${tripId}/collaborators`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/trips/${tripId}/collaborators`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -577,7 +577,7 @@ const inviteCollaborator = async () => {
   };
 
   const removeCollaborator = async (collaboratorId: string) => {
-    await fetch(`http://localhost:5000/collaborators/${collaboratorId}`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/collaborators/${collaboratorId}`, {
       method: "DELETE",
     });
 
@@ -588,7 +588,7 @@ const inviteCollaborator = async () => {
     collaboratorId: string,
     newRole: string
   ) => {
-    await fetch(`http://localhost:5000/collaborators/${collaboratorId}`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/collaborators/${collaboratorId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -610,7 +610,7 @@ const inviteCollaborator = async () => {
     try {
       const totalDays = Math.max(days.length, 1);
 
-      const res = await fetch("http://localhost:5000/ai/generate-plan", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/generate-plan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -643,7 +643,7 @@ const inviteCollaborator = async () => {
     setIsSavingAiItems(true);
 
     try {
-      const res = await fetch("http://localhost:5000/ai/generate-items", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/generate-items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -676,7 +676,7 @@ const inviteCollaborator = async () => {
     setBudgetBreakdown(null);
 
     try {
-      const res = await fetch("http://localhost:5000/ai/budget-breakdown", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/budget-breakdown", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -709,7 +709,7 @@ const inviteCollaborator = async () => {
     setIsLoadingWeather(true);
 
     try {
-      const res = await fetch("http://localhost:5000/weather", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/weather", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -740,7 +740,7 @@ const inviteCollaborator = async () => {
     setIsLoadingAttractions(true);
 
     try {
-      const res = await fetch("http://localhost:5000/ai/nearby-attractions", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/nearby-attractions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -771,7 +771,7 @@ const inviteCollaborator = async () => {
     setIsLoadingHotels(true);
 
     try {
-      const res = await fetch("http://localhost:5000/ai/hotels", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/hotels", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -803,7 +803,7 @@ const inviteCollaborator = async () => {
     setIsLoadingRestaurants(true);
 
     try {
-      const res = await fetch("http://localhost:5000/ai/restaurants", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/restaurants", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -835,7 +835,7 @@ const inviteCollaborator = async () => {
     setChatReply("");
 
     try {
-      const res = await fetch("http://localhost:5000/ai/chat", {
+      const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -866,7 +866,7 @@ const inviteCollaborator = async () => {
       return;
     }
 
-    await fetch("http://localhost:5000/expenses", {
+    await fetch("https://trip-planner-server-k0t8.onrender.com/expenses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -886,7 +886,7 @@ const inviteCollaborator = async () => {
   };
 
   const deleteExpense = async (expenseId: string) => {
-    await fetch(`http://localhost:5000/expenses/${expenseId}`, {
+    await fetch(`https://trip-planner-server-k0t8.onrender.com/expenses/${expenseId}`, {
       method: "DELETE",
     });
 
@@ -926,7 +926,7 @@ const fetchProgressRecommendations = async () => {
   setIsLoadingProgressRecommendations(true);
 
   try {
-    const res = await fetch("http://localhost:5000/ai/progress-recommendations", {
+    const res = await fetch("https://trip-planner-server-k0t8.onrender.com/ai/progress-recommendations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

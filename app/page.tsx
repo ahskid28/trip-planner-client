@@ -41,7 +41,7 @@ export default function Home() {
   const [ownerId, setOwnerId] = useState("");
 
   const fetchUsers = async () => {
-    const response = await fetch("http://localhost:5000/users");
+    const response = await fetch("https://trip-planner-server-k0t8.onrender.com");
     const data = await response.json();
     setUsers(data);
 
@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   const fetchTrips = async () => {
-    const response = await fetch("http://localhost:5000/trips");
+    const response = await fetch("https://trip-planner-server-k0t8.onrender.com/trips");
     const data = await response.json();
     setTrips(data);
   };
@@ -68,7 +68,7 @@ export default function Home() {
       return;
     }
 
-    await fetch("http://localhost:5000/trips", {
+    await fetch("https://trip-planner-server-k0t8.onrender.com/trips", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
