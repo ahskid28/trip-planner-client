@@ -1175,8 +1175,270 @@ const packingPercent =
       Dashboard
     </p>
     <h2 className="text-3xl font-extrabold text-slate-800">
-      Trip Analytics
+
+     AI Trip Planner
     </h2>
+  </div>
+</div>
+
+          <textarea
+            className="mb-4 w-full rounded border p-3"
+            rows={3}
+            placeholder="Example: beaches, cafes, nightlife, vegetarian food, budget friendly"
+            value={aiPreferences}
+            onChange={(e) => setAiPreferences(e.target.value)}
+          />
+
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={generateAiPlan}
+              disabled={isGenerating}
+              className="rounded bg-purple-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isGenerating ? "Generating Plan..." : "Generate AI Text Plan"}
+            </button>
+
+            <button
+              onClick={generateAndSaveAiItems}
+              disabled={isSavingAiItems}
+              className="rounded bg-indigo-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isSavingAiItems
+                ? "Creating Items..."
+                : "Generate & Save AI Itinerary"}
+            </button>
+
+            <button
+              onClick={generateBudgetBreakdown}
+              disabled={isGeneratingBudget}
+              className="rounded bg-green-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isGeneratingBudget
+                ? "Generating Budget..."
+                : "Generate Budget Breakdown"}
+            </button>
+
+            <button
+              onClick={fetchWeather}
+              disabled={isLoadingWeather}
+              className="rounded bg-sky-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isLoadingWeather ? "Loading Weather..." : "Get Weather Forecast"}
+            </button>
+
+            <button
+              onClick={fetchNearbyAttractions}
+              disabled={isLoadingAttractions}
+              className="rounded bg-orange-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isLoadingAttractions
+                ? "Finding Attractions..."
+                : "Find Nearby Attractions"}
+            </button>
+
+            <button
+              onClick={fetchHotels}
+              disabled={isLoadingHotels}
+              className="rounded bg-pink-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isLoadingHotels ? "Finding Hotels..." : "Find Hotels"}
+            </button>
+
+            <button
+              onClick={fetchRestaurants}
+              disabled={isLoadingRestaurants}
+              className="rounded bg-amber-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isLoadingRestaurants
+                ? "Finding Restaurants..."
+                : "Find Restaurants"}
+            </button>
+
+            <button
+  onClick={fetchProgressRecommendations}
+  disabled={isLoadingProgressRecommendations}
+  className="rounded bg-teal-600 px-4 py-2 text-white disabled:bg-gray-400"
+>
+  {isLoadingProgressRecommendations
+    ? "Generating Recommendations..."
+    : "Progress Recommendations"}
+</button>
+          </div>
+
+          {aiPlan && (
+            <div className="mt-6 whitespace-pre-wrap rounded border bg-gray-50 p-4 text-sm leading-6">
+              {aiPlan}
+            </div>
+          )}
+
+          {budgetBreakdown && (
+            <div className="mt-6 rounded border bg-green-50 p-4">
+              <h3 className="mb-3 text-lg font-bold">AI Budget Breakdown</h3>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                <p>🏨 Hotel: ₹{budgetBreakdown.hotel}</p>
+                <p>🍽 Food: ₹{budgetBreakdown.food}</p>
+                <p>🚕 Transport: ₹{budgetBreakdown.transport}</p>
+                <p>🎟 Activities: ₹{budgetBreakdown.activities}</p>
+                <p>🛍 Shopping: ₹{budgetBreakdown.shopping}</p>
+              </div>
+            </div>
+          )}
+
+          {weather && (
+            <div className="mt-6 rounded border bg-sky-50 p-4">
+              <h3 className="mb-3 text-lg font-bold">
+                Weather Forecast for {weather.location}
+              </h3>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                {weather.daily.time.map((date: string, index: number) => (
+                  <div key={date} className="rounded bg-white p-3 shadow-sm">
+                    <p className="font-semibold">
+                      {new Date(date).toLocaleDateString()}
+                    </p>
+                    <p>🌡 Max: {weather.daily.temperature_2m_max[index]}°C</p>
+                    <p>❄ Min: {weather.daily.temperature_2m_min[index]}°C</p>
+                    <p>
+                      🌧 Rain Chance:{" "}
+                      {weather.daily.precipitation_probability_max[index]}%
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {attractions.length > 0 && (
+            <div className="mt-6 rounded border bg-orange-50 p-4">
+              <h3 className="mb-3 text-lg font-bold">Nearby Attractions</h3>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                {attractions.map((place, index) => (
+                  <div key={index} className="rounded bg-white p-4 shadow-sm">
+                    <h4 className="text-lg font-bold text-slate-800">{place.name}</h4>
+                    <p className="text-sm text-gray-600">Type: {place.type}</p>
+                    <p className="mt-2 text-sm">{place.description}</p>
+                    <p className="mt-2 text-sm">Best Time: {place.bestTime}</p>
+                    <p className="text-sm">
+                      Estimated Cost: ₹{place.estimatedCost}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hotels.length > 0 && (
+            <div className="mt-6 rounded border bg-pink-50 p-4">
+              <h3 className="mb-3 text-lg font-bold">Hotel Recommendations</h3>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                {hotels.map((hotel, index) => (
+                  <div key={index} className="rounded bg-white p-4 shadow-sm">
+                    <h4 className="text-lg font-bold text-slate-800">{hotel.name}</h4>
+                    <p className="text-sm text-gray-600">Area: {hotel.area}</p>
+                    <p className="text-sm">
+                      Price/Night: ₹{hotel.pricePerNight}
+                    </p>
+                    <p className="text-sm">Rating: ⭐ {hotel.rating}</p>
+                    <p className="text-sm">Best For: {hotel.bestFor}</p>
+                    <p className="mt-2 text-sm">{hotel.reason}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {restaurants.length > 0 && (
+            <div className="mt-6 rounded border bg-amber-50 p-4">
+              <h3 className="mb-3 text-lg font-bold">
+                Restaurant Recommendations
+              </h3>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                {restaurants.map((restaurant, index) => (
+                  <div key={index} className="rounded bg-white p-4 shadow-sm">
+                    <h4 className="text-lg font-bold text-slate-800">{restaurant.name}</h4>
+                    <p className="text-sm text-gray-600">
+                      Area: {restaurant.area}
+                    </p>
+                    <p className="text-sm">Cuisine: {restaurant.cuisine}</p>
+                    <p className="text-sm">
+                      Price for Two: ₹{restaurant.priceForTwo}
+                    </p>
+                    <p className="text-sm">
+                      Best Dish: {restaurant.bestDish}
+                    </p>
+                    <p className="mt-2 text-sm">{restaurant.reason}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 rounded border bg-violet-50 p-4">
+            <h3 className="mb-3 text-lg font-bold">AI Travel Chatbot</h3>
+
+            <textarea
+              className="mb-3 w-full rounded border p-3"
+              rows={3}
+              placeholder="Ask something like: What should I do on Day 2?"
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+            />
+
+            <button
+              onClick={askTravelChatbot}
+              disabled={isChatLoading}
+              className="rounded bg-violet-600 px-4 py-2 text-white disabled:bg-gray-400"
+            >
+              {isChatLoading ? "Thinking..." : "Ask AI"}
+            </button>
+
+            {chatReply && (
+              <div className="mt-4 whitespace-pre-wrap rounded bg-white p-4 text-sm shadow-sm">
+                {chatReply}
+              </div>
+            )}
+            {progressRecommendations.length > 0 && (
+  <div className="mt-6 rounded border bg-teal-50 p-4">
+    <h3 className="mb-3 text-lg font-bold">
+      AI Progress Recommendations
+    </h3>
+
+    <div className="grid gap-3 md:grid-cols-2">
+      {progressRecommendations.map((rec, index) => (
+        <div
+          key={index}
+          className="rounded bg-white p-4 shadow-sm"
+        >
+          <h4 className="text-lg font-bold text-slate-800">
+            {rec.title}
+          </h4>
+
+          <p className="text-sm text-gray-600">
+            Type: {rec.type}
+          </p>
+
+          <p className="mt-2 text-sm">
+            {rec.reason}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-white/70 bg-white/90 p-6 shadow-xl backdrop-blur">
+          <div className="mb-6 flex items-center justify-between">
+  <div>
+    <p className="text-sm font-medium uppercase tracking-widest text-blue-500">
+      
+      Trip Analytics
+    </p>
   </div>
 </div>
 
@@ -1773,268 +2035,9 @@ const packingPercent =
       Dashboard
     </p>
     <h2 className="text-3xl font-extrabold text-slate-800">
-      AI Trip Planner
-    </h2>
-  </div>
-</div>
-
-          <textarea
-            className="mb-4 w-full rounded border p-3"
-            rows={3}
-            placeholder="Example: beaches, cafes, nightlife, vegetarian food, budget friendly"
-            value={aiPreferences}
-            onChange={(e) => setAiPreferences(e.target.value)}
-          />
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={generateAiPlan}
-              disabled={isGenerating}
-              className="rounded bg-purple-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isGenerating ? "Generating Plan..." : "Generate AI Text Plan"}
-            </button>
-
-            <button
-              onClick={generateAndSaveAiItems}
-              disabled={isSavingAiItems}
-              className="rounded bg-indigo-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isSavingAiItems
-                ? "Creating Items..."
-                : "Generate & Save AI Itinerary"}
-            </button>
-
-            <button
-              onClick={generateBudgetBreakdown}
-              disabled={isGeneratingBudget}
-              className="rounded bg-green-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isGeneratingBudget
-                ? "Generating Budget..."
-                : "Generate Budget Breakdown"}
-            </button>
-
-            <button
-              onClick={fetchWeather}
-              disabled={isLoadingWeather}
-              className="rounded bg-sky-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isLoadingWeather ? "Loading Weather..." : "Get Weather Forecast"}
-            </button>
-
-            <button
-              onClick={fetchNearbyAttractions}
-              disabled={isLoadingAttractions}
-              className="rounded bg-orange-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isLoadingAttractions
-                ? "Finding Attractions..."
-                : "Find Nearby Attractions"}
-            </button>
-
-            <button
-              onClick={fetchHotels}
-              disabled={isLoadingHotels}
-              className="rounded bg-pink-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isLoadingHotels ? "Finding Hotels..." : "Find Hotels"}
-            </button>
-
-            <button
-              onClick={fetchRestaurants}
-              disabled={isLoadingRestaurants}
-              className="rounded bg-amber-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isLoadingRestaurants
-                ? "Finding Restaurants..."
-                : "Find Restaurants"}
-            </button>
-
-            <button
-  onClick={fetchProgressRecommendations}
-  disabled={isLoadingProgressRecommendations}
-  className="rounded bg-teal-600 px-4 py-2 text-white disabled:bg-gray-400"
->
-  {isLoadingProgressRecommendations
-    ? "Generating Recommendations..."
-    : "Progress Recommendations"}
-</button>
-          </div>
-
-          {aiPlan && (
-            <div className="mt-6 whitespace-pre-wrap rounded border bg-gray-50 p-4 text-sm leading-6">
-              {aiPlan}
-            </div>
-          )}
-
-          {budgetBreakdown && (
-            <div className="mt-6 rounded border bg-green-50 p-4">
-              <h3 className="mb-3 text-lg font-bold">AI Budget Breakdown</h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                <p>🏨 Hotel: ₹{budgetBreakdown.hotel}</p>
-                <p>🍽 Food: ₹{budgetBreakdown.food}</p>
-                <p>🚕 Transport: ₹{budgetBreakdown.transport}</p>
-                <p>🎟 Activities: ₹{budgetBreakdown.activities}</p>
-                <p>🛍 Shopping: ₹{budgetBreakdown.shopping}</p>
-              </div>
-            </div>
-          )}
-
-          {weather && (
-            <div className="mt-6 rounded border bg-sky-50 p-4">
-              <h3 className="mb-3 text-lg font-bold">
-                Weather Forecast for {weather.location}
-              </h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {weather.daily.time.map((date: string, index: number) => (
-                  <div key={date} className="rounded bg-white p-3 shadow-sm">
-                    <p className="font-semibold">
-                      {new Date(date).toLocaleDateString()}
-                    </p>
-                    <p>🌡 Max: {weather.daily.temperature_2m_max[index]}°C</p>
-                    <p>❄ Min: {weather.daily.temperature_2m_min[index]}°C</p>
-                    <p>
-                      🌧 Rain Chance:{" "}
-                      {weather.daily.precipitation_probability_max[index]}%
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {attractions.length > 0 && (
-            <div className="mt-6 rounded border bg-orange-50 p-4">
-              <h3 className="mb-3 text-lg font-bold">Nearby Attractions</h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {attractions.map((place, index) => (
-                  <div key={index} className="rounded bg-white p-4 shadow-sm">
-                    <h4 className="text-lg font-bold text-slate-800">{place.name}</h4>
-                    <p className="text-sm text-gray-600">Type: {place.type}</p>
-                    <p className="mt-2 text-sm">{place.description}</p>
-                    <p className="mt-2 text-sm">Best Time: {place.bestTime}</p>
-                    <p className="text-sm">
-                      Estimated Cost: ₹{place.estimatedCost}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {hotels.length > 0 && (
-            <div className="mt-6 rounded border bg-pink-50 p-4">
-              <h3 className="mb-3 text-lg font-bold">Hotel Recommendations</h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {hotels.map((hotel, index) => (
-                  <div key={index} className="rounded bg-white p-4 shadow-sm">
-                    <h4 className="text-lg font-bold text-slate-800">{hotel.name}</h4>
-                    <p className="text-sm text-gray-600">Area: {hotel.area}</p>
-                    <p className="text-sm">
-                      Price/Night: ₹{hotel.pricePerNight}
-                    </p>
-                    <p className="text-sm">Rating: ⭐ {hotel.rating}</p>
-                    <p className="text-sm">Best For: {hotel.bestFor}</p>
-                    <p className="mt-2 text-sm">{hotel.reason}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {restaurants.length > 0 && (
-            <div className="mt-6 rounded border bg-amber-50 p-4">
-              <h3 className="mb-3 text-lg font-bold">
-                Restaurant Recommendations
-              </h3>
-
-              <div className="grid gap-3 md:grid-cols-2">
-                {restaurants.map((restaurant, index) => (
-                  <div key={index} className="rounded bg-white p-4 shadow-sm">
-                    <h4 className="text-lg font-bold text-slate-800">{restaurant.name}</h4>
-                    <p className="text-sm text-gray-600">
-                      Area: {restaurant.area}
-                    </p>
-                    <p className="text-sm">Cuisine: {restaurant.cuisine}</p>
-                    <p className="text-sm">
-                      Price for Two: ₹{restaurant.priceForTwo}
-                    </p>
-                    <p className="text-sm">
-                      Best Dish: {restaurant.bestDish}
-                    </p>
-                    <p className="mt-2 text-sm">{restaurant.reason}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-6 rounded border bg-violet-50 p-4">
-            <h3 className="mb-3 text-lg font-bold">AI Travel Chatbot</h3>
-
-            <textarea
-              className="mb-3 w-full rounded border p-3"
-              rows={3}
-              placeholder="Ask something like: What should I do on Day 2?"
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-            />
-
-            <button
-              onClick={askTravelChatbot}
-              disabled={isChatLoading}
-              className="rounded bg-violet-600 px-4 py-2 text-white disabled:bg-gray-400"
-            >
-              {isChatLoading ? "Thinking..." : "Ask AI"}
-            </button>
-
-            {chatReply && (
-              <div className="mt-4 whitespace-pre-wrap rounded bg-white p-4 text-sm shadow-sm">
-                {chatReply}
-              </div>
-            )}
-            {progressRecommendations.length > 0 && (
-  <div className="mt-6 rounded border bg-teal-50 p-4">
-    <h3 className="mb-3 text-lg font-bold">
-      AI Progress Recommendations
-    </h3>
-
-    <div className="grid gap-3 md:grid-cols-2">
-      {progressRecommendations.map((rec, index) => (
-        <div
-          key={index}
-          className="rounded bg-white p-4 shadow-sm"
-        >
-          <h4 className="text-lg font-bold text-slate-800">
-            {rec.title}
-          </h4>
-
-          <p className="text-sm text-gray-600">
-            Type: {rec.type}
-          </p>
-
-          <p className="mt-2 text-sm">
-            {rec.reason}
-          </p>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-white/70 bg-white/90 p-6 shadow-xl backdrop-blur">
-          <div className="mb-6 flex items-center justify-between">
-  <div>
-    <p className="text-sm font-medium uppercase tracking-widest text-blue-500">
+      
       Dashboard
-    </p>
+    </h2>
     <h2 className="text-3xl font-extrabold text-slate-800">
       Expense Tracker
     </h2>
